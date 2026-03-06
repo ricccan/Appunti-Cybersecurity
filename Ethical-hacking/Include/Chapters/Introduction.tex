@@ -1,0 +1,140 @@
+\chapter{Casing the Establishment}
+\thispagestyle{plain}
+
+
+
+\newacronym{iaaas}{IAAAS}{It’s All About Anonymity, Stupid}
+\newacronym{Tor}{Tor}{The Onion Router}
+\newacronym{ICANN}{ICANN}{Internet Corporation for Assigned
+Names and Numbers}
+
+\section{Hackers tools}
+
+\emph{\gls{iaaas}}
+
+Hackers use a wide variety of tools:
+\begin{itemize}
+    \item \emph{\gls{Tor}}, wich uses Layered cryptography with SOCKS proxy and Anonymous outgoing TCP connections
+    \item Tor GUI client (Vidalia) and Privoxy (web filtering proxy)
+    \item Google on browser for juicy targets
+    \item tor-resolve instead of host for IP addresses
+    \item proxychains to force connections through Tor and Nmap to scan service on targets
+    \item socat to relay persistently, netcat to send requests to servers
+\end{itemize}
+
+\subsection{\emph{\gls{Tor}}}
+How it works: 
+\begin{enumerate}
+    \item Alice \emph{\gls{Tor}} client obtain a list of \emph{\gls{Tor}} nodes from a directory server
+    \item Alice \emph{\gls{Tor}} client picks a random path trough the nodes to the destination, using encrypted links
+\end{enumerate}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Include/Chapters/tor1.PNG}
+        \caption{first step}
+        \label{fig:img1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Include/Chapters/tor2.PNG}
+        \caption{second step}
+        \label{fig:img2}
+    \end{minipage}
+\end{figure}
+
+
+\subsection{Vidalia}
+Vidalia is a discontinued cross-platform GUI for controlling Tor.
+It allows the user to start, stop or view the status of Tor
+
+\subsection{Privoxy}
+Privoxy is a free web proxy for enhancing
+privacy, manipulating cookies and
+modifying web page data and HTTP headers
+before the page is rendered by the browser.
+E.g. filtering web pages and removing
+advertisements. Privoxy can be customized by
+users.
+
+\section{Footprinting}
+What is footprinting? its the profiling of the target organization. It has to be done to give a picture of what the hacker can see. It has to be done regularly to minimize info leaks and implement monitoring
+
+The profiling comprehend: 
+\begin{itemize}
+    \item Internet: domain names, network blocks and subnets, IP, TCP/UDP services, access controll, IDS, DNS hostnames, CPU arch, system enumeration
+    \item intranet: network protocols, intranet domain names, network blocks, IP, TCP/UDP services
+    \item Remote access: phone numbers, remote system type, VPN, authentication mechanism
+    \item Extranet: domain names, connection source and destination, access control, type of connection
+\end{itemize}
+
+Profiling steps:
+\begin{enumerate}
+    \item Determine the scope of the activities
+    \item get proper authorization trough politics and founding
+    \item use publicly available information
+    \item WHOIS and DNS enumeration: Domain names, IP addresses, port numbers
+    \item DNS interrogation: obtain info about the organization by querying DNS server, DNS zone transfer by untrusted users. Use nslookup to map all resource records. Search with grep,sed,awk,perl
+    \item network reconnaissance: topology and access path diagram using traceroute, tracert, visualroute, McAfee’s
+NeoTrace, Foundstone’s Trout, Owasp
+AMASS
+
+\end{enumerate}
+
+\subsection{publicly available information}
+There are a lot of information on the internet that we can use:
+\begin{itemize}
+    \item HTML source code: using website mirroring tool for offline viewing, and reading things inside comment tags
+    \item Enumerate hidden files and directories
+    \item remote access to internal resources via browser: proxy to internal service
+    \item looking for other website other than the main (web, test, VPN sites)
+    \item related organization, to do a social engeneering attack or, in outsourced web developement, partners might not be as secure
+    \item location details such as images or geolocalization: needed for surveillance, social engeneering, unauthorized access
+    \item names: usernames, e-mail addresses
+    \item phone number, phisical addresses
+    \item employees personal details: home phone number, address, social security number, credit history, family ancestry, photos
+    \item busness directory services
+    \item job posting and resumes, ex employees
+    \item employee home computers, for remote access to target, keystroke logger to see the passwords
+    \item company history: mergers, acquisitions, scandals, layoff, hiring, reorganization, outsourcing, temorary contractors, business info, stock market sites
+    \item privacy and security policies
+    \item archived information
+\end{itemize}
+
+\subsection{Public Database Security Countermeasures}
+A lot of countermeasures can be taken to minimize the leakage of data:
+\begin{itemize}
+    \item keeping administrative contacts up to date
+    \item anonymize administrative contacts
+    \item authenticate updates rigidly
+    \item restrict zone transfer to only authorized servers
+    \item Configure a firewall to deny unauthorized connection to TCP port 53
+    \item configure not to provide internal DNS info
+    \item discourage the use of HINFO records
+    \item use intrusion detection: snort,bro
+    \item Configure border routers to limit ICMP and UDP traffic to specific systems
+\end{itemize}
+
+
+\chapter{Scanning}
+\section{Objectives}
+
+\begin{enumerate}
+    \item  determining if the system is alive
+    \item determining witch service are running or listening
+    \item detecting operating system 
+    \item Processing and storing data
+\end{enumerate}
+
+
+\section{Determining if the system is alive}
+\subsection{same subnet}
+Using ping sweeps: we can use ARP-SCAN, Nmap, Cain
+
+NMAP sends an ICMP ECHO request and ARP ping and TCP ping. If the target network is monitored by in IDS you could trigger an alert for the extra traffic generated
+
+\subsection{remote host/router}
+ICMP ECHO REQUEST, ICMP ECHO REPLY,ICMP TIMESTAMP,ICMP ADDRESS MASK
+Ping: OS utilities for ECHO RREQUEST/REPLY
