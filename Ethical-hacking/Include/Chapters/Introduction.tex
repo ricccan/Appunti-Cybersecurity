@@ -170,3 +170,19 @@ There are different types of port scanning:
     \item TCP windows scan
     \item UDP scan
 \end{itemize}
+
+\section{Detecting the Operating System}
+OS detection is useful info for vulnerability mapping.
+There are different techniques for OS detection: banner grabbing: using FTP, SMTP, HTTP, POP.
+Stack fingerprinting: using TCP/IP stack implementation, making guesses from available ports (windows and unix have OS specific ports)
+
+
+\subsection{Countermeasures}
+Two type of countermeasures:
+\begin{itemize}
+    \item Detection: using Snort, Scanlog, option set
+    \item Prevention: changing unique stack charateristic(not recommended), using a secure proxy or firewall, Active Defense.
+\end{itemize}
+
+\section{Processing and storing data}
+The efficency to manage scan data is the speeed of the attack, and the number of system compromised
