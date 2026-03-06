@@ -31,13 +31,12 @@
 \Punteggiatura{}					% Modifica la punteggiatura dopo 'Candidato', 'Realatore' ecc. (vuoto per togliere)
 \NCandidato{Candidate}					% Sostituisce 'Candidato' con '...'
 \Preambolo{\renewcommand{\frontsmallfont}[1]{\small}}
-\Candidato[matricola]{Name}
+\Candidato[Riccardo]{Candidi}
 %\Candidato{\small{1532252}}
-\NRelatore{Thesis Advisor}{Relatori}			% Sostituisce 'Relatori' con 'Advisor' (permette anche di scrivere più relatori)
-\Relatore{Prof. XXX XXX}
+
 %\Correlatore{}
 %\Rientro{1cm}						% Rientro di Relatore e Candidato
-\Piede{Academic Year MMXIX-MMXXII (XXXV cycle)}					% A fondo pagina
+\Piede{Academic Year 2026}					% A fondo pagina
 \end{frontespizio}
 \IfFileExists{\jobname-frn.pdf}{}{%
 \immediate\write18{pdflatex \jobname-frn}}
