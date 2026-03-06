@@ -123,7 +123,7 @@ A lot of countermeasures can be taken to minimize the leakage of data:
 
 \begin{enumerate}
     \item  determining if the system is alive
-    \item determining witch service are running or listening
+    \item determining which service are running or listening
     \item detecting operating system 
     \item Processing and storing data
 \end{enumerate}
@@ -131,10 +131,42 @@ A lot of countermeasures can be taken to minimize the leakage of data:
 
 \section{Determining if the system is alive}
 \subsection{same subnet}
-Using ping sweeps: we can use ARP-SCAN, Nmap, Cain
-
+Using ping sweeps: we can use ARP-SCAN, Nmap, Cain.
 NMAP sends an ICMP ECHO request and ARP ping and TCP ping. If the target network is monitored by in IDS you could trigger an alert for the extra traffic generated
 
 \subsection{remote host/router}
-ICMP ECHO REQUEST, ICMP ECHO REPLY,ICMP TIMESTAMP,ICMP ADDRESS MASK
-Ping: OS utilities for ECHO RREQUEST/REPLY
+For a remote host we can use ICMP ECHO REQUEST, ICMP ECHO REPLY,ICMP TIMESTAMP,ICMP ADDRESS MASK
+Others useful tools are: ping, nmap, hping3, nping, Superscan
+
+\subsection{TCP/UDP host discovery}
+When internal or external ICMP is not permitted.
+For servers we use TCP/UDP service ports, for desktop we use local firewall trough remote desktop
+
+\subsection{Ping sweep countermeasures}
+Two type of countermeasures:
+\begin{itemize}
+    \item Detection: using IDS, commercial firewalls and host based tools like Scanlogd, courtney, ippl, protolog
+    \item Prevention: using ACL in firewall to limit ICMP traffic in the network or system, allowing only ECHO REPLY, HOST UNREACHABLE, PROTOCOL UNREACHABLE, PORT UNREACHABLE, TIMESTAMP EXCEEDED only in specific host in DMZ. Allow only ISP's specific IP addresses
+\end{itemize}
+
+\section{determining which service are running or listening}
+\subsection{Port scanning}
+Port scanning has the objective to:
+\begin{itemize}
+    \item identify TCP/UDP services running on the target host
+    \item identify the type of OS of the target
+    \item identify application or version of the service
+\end{itemize}
+
+There are different types of port scanning:
+\begin{itemize}
+    \item TCP connect scan(3 way handshake)
+    \item TCP SYN scan (half open scan)
+    \item TCP FIN scan
+    \item TCP NULL scan
+    \item TCP Xmas scan
+    \item TCP ACK scan
+    \item TCP Window scan
+    \item TCP windows scan
+    \item UDP scan
+\end{itemize}
