@@ -210,10 +210,10 @@ The most common services to grab are:
     \item FTP, TCP 21: FTP password are sent in clear. The countermeasures are: using HTTP instead of FTP and disallow unresricted uploading
     \item Telnet, TCP 23: it has banners and alows bruteforce username enumeration. It sends password and data in cleartext. The countermeasures are: stop using telnet, or use a VPN, modify banner info, reconnect between failed login attempts.
     \item SMTP, TCP 25: SMTP can be enumerated with telnet using the commands VRFY (to confirm names of valid user) and EXPN (to reveal the actual delivery addresses of alias and mailing lists). The countermeasure is to disable EXPN and VRFY commands or restrict them to authenticated users 
-    \item HTTP, TCP 80
+    \item HTTP, TCP 80: grab banner with telnet or netcat, crawl web sites with Sam Spade utility. Grendel scan crawls sites and reports on vulnerabilities, looking for comments, robots.txt files, directories etc. The countermeasures are: changing th banner on the web server.
     \item DNS, TCP/UDP 53: Zone transfer dump the entire contents of a domain's zone files. Its restricted to authorized machine on most DNS servers
-    \item TFTP, UDP 69
-    \item Finger, TCP 79
+    \item TFTP, UDP 69: TFTP is inherently insecure, as it runs in cleartext, there is no authentication, anyone can grab any file. To restrict access we can use tools such as TCP wrappers, wich are like software firewall that allows only certain clients to access a service, limit access to /tftpboot direcyory and making sure it's blocked at the border firewall
+    \item Finger, TCP 79: shows user on local or remote systems. The countermeasure is to block remote access.
 \end{itemize}
 
 \subsection{DNS enumeration tools and countermeasures}
@@ -228,6 +228,60 @@ The countemeasures are:
     \item block or restrict DNS zone transfer
     \item restrict DNS queries to limit caache snooping 
 \end{itemize}
+
+\subsection{MSRPC Enumeration Countermeasures}
+Block port 135 at the firewall, use a virtual private network to internal network, use Outlook web access
+
+\subsection{NET VIEW}
+net view can list the domains, or the computer in each domain.
+\subsection{NBNS}
+normally NBNS only works on the local network secment. It is possible to route NBNS over TCP/IP allowing enumeration from a remote system
+
+There are other tools to enumerate NBNS
+\begin{itemize}
+    \item NLTEST and NETDOM can find domain controllers
+    \item NETVIEWX finds specific services
+    \item NBSTAT collect information from a single system
+    \item NBTSCAN scans a range of addresses and dumps the whole NetBIOS name table
+    \item NMBscan in Kali linux
+\end{itemize}
+
+\subsection{NetBIOS name services enumeration}
+To stop NetBIOS enumeration: block udp 137 at the firewall or restrict it to only certain hosts, disable the Alerter and Messenger on individual hosts.
+
+NetBIOS sessions are the notorious Null Sessions. The windows server message block (SMB) protocol hands a wealth of information freely.
+
+Countermeasures are: bloking tcp 139 and 445, setting the RestrictAnonymous registry key to 1 or 2, Audit yourself with dumpsec.
+
+\subsection{SNMP UDP 161}
+Simple network management protocol, it is intended for network management and monitoring. It provides inside information on net devices software and systems. It has a minimal security system called SNMP community strings. Community strings act like passwords. There are 3 kind of SNMP community strings: read only, read-write, trap.
+
+Data available trough SNMP:
+\begin{itemize}
+    \item Running services
+    \item Share names
+    \item Share paths
+    \item Comments on shares
+    \item Usernames
+    \item Domain name
+\end{itemize}
+
+SNMP enumeration tools: snmputil for windows, snmpget or snmpwalk for Linux, IP Network Browser a graphical tool by Solarwinds.
+
+Attacker who guess the SNMP community string may be able to remotely control your network devices.
+
+Countermeasures:
+\begin{itemize}
+    \item remove or disable unneeded SNMP agents
+    \item change comunity strings to non default values 
+    \item block access to TCP UDP port 161 at net perimeter devices
+    \item restrict access to SNMP agents to the appropriate management console IP address
+    \item Use SNMPv3, wich provides encryption and authentication
+\end{itemize}
+
+\subsection{BGP tcp 179}
+border gateway protocol is the routing protocol among autonomous systems. It can be used to enumerate all the networks of a particular corporation. There is no countermeasure
+
 \chapter{Hacking Windows and Rainbow Tables}
 \section{}
 
