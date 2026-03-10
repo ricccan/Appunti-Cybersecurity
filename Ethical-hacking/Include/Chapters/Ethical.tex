@@ -197,9 +197,37 @@ There are a lot of tools for vulnerability scanning:
 \begin{itemize}
     \item Using database of known vulnerabilities
     \item free scanners like: Nessus, OpenVAS
-    \item Nessus  
+    \item Nessus provides a lot of tools, like: exhaustive scanning, custom plug ins, open source. Nessus countermeasures are: using IDS/IPS and audit yourself regularly.
 \end{itemize}
 
+\subsection{basic banner grabbing}
+Banner grabbing is the process of analyze the banner of a service to obtain info about the software and version. The banner are the response messages of an open port.
+It can be done manually using telnet, or automatically using netcat or nc.
+The countermesure are: shutting down unecessary services, using an access control list, audit yourself regularly.
+
+The most common services to grab are:
+\begin{itemize}
+    \item FTP, TCP 21: FTP password are sent in clear. The countermeasures are: using HTTP instead of FTP and disallow unresricted uploading
+    \item Telnet, TCP 23: it has banners and alows bruteforce username enumeration. It sends password and data in cleartext. The countermeasures are: stop using telnet, or use a VPN, modify banner info, reconnect between failed login attempts.
+    \item SMTP, TCP 25: SMTP can be enumerated with telnet using the commands VRFY (to confirm names of valid user) and EXPN (to reveal the actual delivery addresses of alias and mailing lists). The countermeasure is to disable EXPN and VRFY commands or restrict them to authenticated users 
+    \item HTTP, TCP 80
+    \item DNS, TCP/UDP 53: Zone transfer dump the entire contents of a domain's zone files. Its restricted to authorized machine on most DNS servers
+    \item TFTP, UDP 69
+    \item Finger, TCP 79
+\end{itemize}
+
+\subsection{DNS enumeration tools and countermeasures}
+\begin{itemize}
+    \item dnsenum: google scraping for additional subdomain, brute forcing subdomains, list domains network ranges, performs WHOIS on the ranges identified, Information correlation
+    \item Fierce.pl 
+\end{itemize}
+
+The countemeasures are:
+\begin{itemize}
+    \item Using separate internal and externa DNS servers
+    \item block or restrict DNS zone transfer
+    \item restrict DNS queries to limit caache snooping 
+\end{itemize}
 \chapter{Hacking Windows and Rainbow Tables}
 \section{}
 
