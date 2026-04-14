@@ -80,7 +80,7 @@ There are 2 main layering models:
     \begin{minipage}{1\textwidth}
         \centering
         \includegraphics[width=\linewidth]{Include/Chapters/isosi.PNG}
-        \caption{Models}\label{fig:img1}
+        \caption{Models}\label{fig:models}
     \end{minipage}
 \end{figure}
 
@@ -91,4 +91,65 @@ There are 2 main layering models:
     \item Internet: Equivalent to layer 3 (network) of the OSI model.(Protocols: IP, ICMP, IPSec). Address: IP address (e.g., 192.168.1.1)
     \item Datalink: Equivalent to layer 2 (data link) of the OSI model.(Protocols: Ethernet, WiFi, ARP, etc.). Address: MAC address (e.g., 00:0a:95:9d:68:16)
     \item Physical layer: Equivalent to Layer 1 (Physical) of the OSI model.
+\end{itemize}
+
+\chapter{iPv6 addressing}
+\section{IPv6 introduction}
+Developed in the 90s, written in exadecimal, has 128-bit addresses. It has stateless autoconfiguration, end-to-end reachability eithout using NAT, support for mobility, easy peer to peer networking.
+
+iPv6 does not use NAT. NAT has been used to hide customers, but it creates some issues, like peer to peer networking.
+
+iPv6 addresses are 128 bit repreented in hexadecimal and has the following format:
+\begin{itemize}
+    \item 1 hex digit = 4 bit 
+    \item 8 groups of 4 hex digits between 0000 and FFFF
+    \item groups are separated by colons
+    \item leading zeros in a group can be ommited
+    \item one or more consecutive groups of zeros can be replaced with a double colon (::)
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{1\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Include/Chapters/ipv6.PNG}
+        \caption{IPv6 address format}
+    \end{minipage}
+\end{figure}
+
+\begin{itemize}
+    \item IPv6 source: always a unicast (link local or GUA)
+    \item IPv6 destination: unicast, multicast, or anycast
+    \item Global Unicast Address (GUA): globally routable and reachable on the IPv6 internet. It has the following format: 2000::/3 (first 3 bits are 001). The next 45 bits are the global routing prefix, assigned by IANA to RIRs. The next 16 bits are the subnet ID, used to identify subnets within an organization. The last 64 bits are the interface ID, used to identify an interface on a subnet.
+    \item prefix: equivalent to the network address of an IPv4 address
+    \item prefix length: equivalent to the subnet mask of an IPv4 address
+    \item interface ID: equivalent to the host address of an IPv4 address
+\end{itemize}
+
+\subsection{Link-local addresses}
+Used to comunicate with other devices on the link. Not routable off the link, only have to be unique on the link. Not included in the IPv6 routing table. An ipv6 devise has at least one local link address.
+
+The router link local is used as the default gateway. Routers exchange routing messages and use the link local address as next hop address in the routing
+
+\subsection{SLAAC}
+Stateless Address Autoconfiguration (SLAAC) allows a host to automatically configure its own IPv6 address without the need for a DHCP server. The host generates its own interface ID and combines it with the network prefix obtained from the router advertisement messages to create a unique IPv6 address.
+
+\subsection{ICMPv6 neighbor discover protocol}
+ICMPv6 Neighbor Discovery defines 5 different packet types:
+\begin{itemize}
+    \item Router Solicitation Message
+    \item Router Advertisement Message
+    \item Neighbor Solicitation Message
+    \item Neighbor Advertisement Message
+    \item Redirect Message
+\end{itemize}
+
+When a host want an IPv6 address, it sends a Router Solicitation message to the all-routers multicast address. The router responds with a Router Advertisement message-
+There are 3 types of Router Advertisement messages:
+\begin{itemize}
+    \item Option 1: SLAAC, No DHCPv6 “I’m everything you need (Prefix, Prefix-length, Default Gateway)”
+    \item Option 2: SLAAC + Stateless DHCPv6 for DNS address “Here is my information but you need to get other information such as DNS
+            addresses from a DHCPv6 server.” (DNS can be in RA)
+    \item Option 3: All addressing except default gateway use DHCPv6
+“I can’t help you. Ask a DHCPv6 server for all your information.”
 \end{itemize}
