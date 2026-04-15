@@ -132,7 +132,18 @@ Used to comunicate with other devices on the link. Not routable off the link, on
 The router link local is used as the default gateway. Routers exchange routing messages and use the link local address as next hop address in the routing
 
 \subsection{SLAAC}
-Stateless Address Autoconfiguration (SLAAC) allows a host to automatically configure its own IPv6 address without the need for a DHCP server. The host generates its own interface ID and combines it with the network prefix obtained from the router advertisement messages to create a unique IPv6 address.
+Stateless Address Autoconfiguration (SLAAC) allows a host to 
+automatically configure its own IPv6 address without the need
+for a DHCP server. The host generates its own interface ID and
+combines it with the network prefix obtained from the router 
+advertisement messages to create a unique IPv6 address.
+
+The idea is to rovide additional addresses with short lifetime and using themm as source address when 
+originating connections. Same prefix as a ublic address, randomized value for interface ID.
+It is common to have multiple temporary addresses to make sure existing connections
+continue while a new temp address is created for a new connection.
+
+
 
 \subsection{ICMPv6 neighbor discover protocol}
 ICMPv6 Neighbor Discovery defines 5 different packet types:
@@ -152,4 +163,39 @@ There are 3 types of Router Advertisement messages:
             addresses from a DHCPv6 server.” (DNS can be in RA)
     \item Option 3: All addressing except default gateway use DHCPv6
 “I can’t help you. Ask a DHCPv6 server for all your information.”
+\end{itemize}
+
+\subsection{multicast addresses}
+Multicast addresses are used to send a packet to multiple destination simultaneously.
+There are two types of multicast addresses: Assigned and Solicited-node.
+
+Multicast address have the prefix FF00::/8. they use a 4 bits field to define the range of the multicast packet, called scope:
+\begin{itemize}
+    \item 0: reserved
+    \item 1: interface-local scope (packets are only valid on the same interface)
+    \item 2: link-local scope (packets are only valid on the same link
+    \item 5: site-local scope (packets are only valid within the same site)
+    \item 8: organization-local scope (packets are only valid within the same organization)
+    \item E: global scope (packets are valid on the entire internet)
+\end{itemize}
+
+4 bits are used to define the flags:
+\begin{itemize}
+    \item 0: permnent, well known multicast address 
+    \item 1: transient, dynamically assigned multicast address
+\end{itemize}
+
+\chapter{IPv4 vs IPv6}
+\begin{itemize}
+    \item version: Ipv4 contains 4, IPv6 contains 6
+    \item internet header lenght(IHL): ipv4 has a 32 bit field including any options or padding, ipv6 has no IHL, his header is fixed at 40bytes
+    \item ipv4 has "type of service" field, ipv6 has "traffic class" field 
+    \item ipv6 has "flow label" field to identify packets in common stream or flow, ipv4 has no equivalent
+    \item ipv4 has 16 bit "total length" field, ipv6 has 32 bit "payload length" field
+    \item ipv4 uses fragmentation, ipv6 does not use fragmentation, the source host is responsible for fragmentation
+    \item ipv4 protocol, ipv6 next header
+    \item ipv4 TTL, ipv6 hop limit
+    \item ipv4 header checksum, ipv6 has no header checksum
+    \item ipv4 has options and padding, ipv6 has extension headers.  Next headers identify the protoco carried in the data portion of the packet
+    \item 
 \end{itemize}
