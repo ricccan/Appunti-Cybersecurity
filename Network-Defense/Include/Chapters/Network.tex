@@ -147,6 +147,8 @@ continue while a new temp address is created for a new connection.
 
 \subsection{ICMPv6 neighbor discover protocol}
 ICMPv6 Neighbor Discovery defines 5 different packet types:
+
+
 \begin{itemize}
     \item Router Solicitation Message
     \item Router Advertisement Message
@@ -196,6 +198,45 @@ Multicast address have the prefix FF00::/8. they use a 4 bits field to define th
     \item ipv4 protocol, ipv6 next header
     \item ipv4 TTL, ipv6 hop limit
     \item ipv4 header checksum, ipv6 has no header checksum
-    \item ipv4 has options and padding, ipv6 has extension headers.  Next headers identify the protoco carried in the data portion of the packet
-    
+    \item ipv4 has options and padding, ipv6 has extension headers.  Next headers identify the protoco carried in the data portion of the packet 
 \end{itemize}
+
+
+\section{IPv6 security}
+IPv6 is not more secure than IPv4 and its security is built in. Even if there is no NAT  in IPv6, it is possible to use firewalls to filter traffic and you are not exposed to attacks from the internet.
+IPv6 is resilient aganinst brute force scanning, but there are other scanning techniques.
+
+There are lots of threats to IPv6, such as:
+\begin{itemize}
+    \item IP spoofing: using a fake ip source address. Solution: ingress filtering, egress filtering, unicast reverse path forwarding (uRPF)
+    \item using traffic clas or flow label to bypass security devices. Solution: firewall should inspect traffic class and flow label fields
+    \item routhing header(Includes one or more IPs that should be “visited” in the path) attacks: using extension headers to bypass security devices. Solution: firewall should inspect extension headers
+    \item fragmentation attacks: using fragmentation to bypass security devices. Solution: firewall should inspect fragments and reassemble them before inspection
+\end{itemize}
+
+\section{associated protocols}
+\subsection{ICMPv6}
+Provides error messages and informational messages. It is used for error reporting, diagnostics, and neighbor discovery. It is an integral part of the IPv6 protocol suite and is used for various functions such as path MTU discovery, router advertisement, and neighbor solicitation.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{1\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Include/Chapters/icmpv6.PNG}
+        \caption{ICMPv6 message types}\label{fig:icmpv6}
+    \end{minipage}
+\end{figure}
+
+\subsection{NDP}
+Used on a link to discover other devices, their link-layer addresses, and to maintain reachability information about the paths to active neighbors. It is used for address autoconfiguration, address resolution, neighbor unreachability detection, and router discovery.
+
+NDP threats include:
+\begin{itemize}
+    \item Neighbor solicitation/advertisement spoofing: an attacker can send fake neighbor solicitation or advertisement messages to redirect traffic or cause a denial of service. Solution: use secure neighbor discovery (SEND) which uses cryptographic methods to authenticate messages.
+    \item Redirection/DOS attacks: an attacker can send fake redirection messages to redirect traffic or cause a denial of service. Solution: use SEND to authenticate messages.
+    \item Man-in-the-middle attacks: an attacker can intercept and modify neighbor discovery messages to redirect traffic or cause a denial of service. Solution: use SEND to authenticate messages.
+\end{itemize}
+
+\subsection{MLD}
+MLD (multicast listener discovery) is used on local link, uses ICMP, required by NDP. IPv6 nodes use it when joining a multicast group
