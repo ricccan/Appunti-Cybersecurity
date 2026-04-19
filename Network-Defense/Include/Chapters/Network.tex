@@ -262,4 +262,63 @@ firewalls rules/proprieties:
 \subsection{Host based packet filters}
 A kind of firewall that disciplines traffic in/out a single host, specifies the packets that can be received and sent. Usually each installed application has a known policy that has to obey
 
-\subsection{Network access }
+\subsection{Network access control list}
+Lists the rights for accessing or using networks (used in routers, switches and firewalls). Usually distinguish between incoming
+and outgoing traffic, per interface/port. Each packet is treated independently, without any knowledge of what
+has come before.
+
+\subsection{Bastion host}
+hardened computer used to deal with all traffic coming a protected network from the outside.
+Hardening is the task of re reducing or removing vulnerabilities in a computer system:
+\begin{itemize}
+    \item remove unnecessary software
+    \item remove unnecessary services
+    \item remove unnecessary accounts
+    \item apply patches and updates
+    \item use strong authentication and access control
+    \item use encryption to protect data in transit and at rest
+    \item monitor and log activity on the system
+\end{itemize}
+
+\subsection{DMZ}
+DMZ stands for demilitarized zone: Computer host or small network inserted as a neutral xone
+between a company private network and the outside public network. Network construct that provides secure segregation of networks that host services for users visitors or partners.
+DMZ is a necessary method of providing a multilayered defense in depth approch to security. It reduces and regulate
+the access to internal(private) components of the IT system.
+
+\subsection{defense in depth}
+A security approach in wich IT systems are protected using multiple overlapping systems. It adds redundancy to the defensive measures, it aims to remove single point of failures
+it finds the right balance between complexity and multiplicity of defense mechanism. In order to compromise a system, an attacker has to find multiple vulnerabilities in different components.
+
+\subsection{Packet filers (stateless firewalls)}
+Drop packets based on source/destination addresses or port numbers or flag. Can operate
+on incoming and outgoing traffic. It checks packets with fake id addresses. It operates in data link, network and transport layer.
+Problem with packet filters:
+\begin{itemize}
+    \item Only a small numbers of parameters: it's easy to specify filtering rules that are too specific or too general
+    \item Payload of TCP is not inspected: there is no protection against attacks based on upper level vulnerabilities.
+    \item limited logging ability
+    \item no authentication facilities
+    \item suscetible to attacks based on vulnerabilities in various implementation of TCP/IP
+\end{itemize}
+
+\subsection{Statefull firewalls}
+statefull inspection firewalls can keep track of established connections. Thet can drop packets
+based on their source or destination IP addresses, port numbers and TCP flags. In this way they solve
+one major problem of simple packet filters, since they can check that incoming traffic from a high-numbered port is a 
+genuine response to an outgoing request. 
+It operates in data link, network and transoprt level.
+
+\subsection{Application level filtering (proxy-like)}
+Deals with the details of services. Needs a separate special purpose mechanism for each application
+Can support user to gateway authentication.
+
+\subsection{Host based firewalls}
+A firewall on each individual host to protect that one machine. Selectively enable specific services or ports that will be used to send and recive raffic.
+It plays a big part in reducing what is accessible from outside and protecting the other element of the system if one is compromised.
+
+\subsection{Circuit level gateways (proxy)}
+Also known as TCP relay. The clients connect to a proxy that relays its connection in a protocol independent manner.
+Provides user authentication. Usually with no content filtering.
+
+TCP relay splices and relay TCP connection. It does not examine content of TCP segments, can use ACL(like packet filtering) and has less controll than application level gateway.
