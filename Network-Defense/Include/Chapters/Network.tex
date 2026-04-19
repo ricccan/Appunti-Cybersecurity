@@ -322,3 +322,99 @@ Also known as TCP relay. The clients connect to a proxy that relays its connecti
 Provides user authentication. Usually with no content filtering.
 
 TCP relay splices and relay TCP connection. It does not examine content of TCP segments, can use ACL(like packet filtering) and has less controll than application level gateway.
+
+\chapter{NAT}
+NAT (Network address translation) translate the address, connecting a LAN to the internet using un-routable in-house LAN addresses.
+In a routed firewall, NAT can filter request from hosts on WAN side to hosts in LAN side, allows host rewuest from LAN side to reach WAN side, and hide LAN host to external port scan.
+
+Routable addresses have to be unique on the internet to be reachable. Non routable addresses are not reachable from the internet.
+
+NAT goals:
+\begin{itemize}
+    \item a private network uses just one IP address provided by ISP to connect to the internet
+    \item private network use private IP addresses provided by IETF
+    \item can change address of devices in private network without notifyng outside world
+    \item can changhe ISP without changing the addresses of devices in prvate network
+    \item Devies inside private network are not explicitly addressable by external network, or visible by outside world.
+\end{itemize}
+
+\section{Source NAT (SNAT)}
+translate outgoing IP source packet headers from the internal host addresses to the WAN ip address. The session
+is masqueraded as coming from NAT device.
+
+The firewall/router forwards replies from the client service request by the external server to the client. Enables the client-server session or connection to continue
+on another port as requested by the extrnal server, forwarding any responses by the server to the client.
+
+The NAT table is where associations between request and internal IP addresses are kept.
+
+\section{Basic NAT}
+a block of external/public IP addresses are set aside for translating the addresses of hosts within a private domain as they originate sessions to the external domain. 
+However, ultiple IP address are difficult to obtain.
+
+\section{Network address port translation (NAPT)}
+Multiplex a number of private hosts into a single external/public IP address.
+The IP address binding extends to transport level identifiers such as TCP/UDP ports.
+NAPT router blocks all incoming ports by default. Many application have had problems with NAPT in their handling of incoming request.
+
+\section{Destination NAT (DNAT)}
+Enables destination servers inside a firewall or router LAN to be accessed by clients located outside.
+The service appears to be hosted by the firewall/router.
+
+The firewall/router uses NAT table to: Translate incoming packets from
+the firewall/router WAN IP address
+to the internal address of the
+server. Forward the replies to the client
+service request from the internal
+server to the external client. Enables the client-server session
+or connection to continue on
+another port as requested by the
+internal server, forwarding any
+responses by the client to the
+server 
+
+\chapter{Iptables}
+Foundamentals: 
+\begin{itemize}
+    \item rules are grouped in "tables"
+    \item Each table has different "chains" of rules and different possible "targets"
+    \item Each packet is subjected to each rule of a chain
+    \item packet fates depend on first matching rule 
+\end{itemize}
+
+Built in tables:
+\begin{itemize}
+    \item filter: default table, used for filtering packets
+    \item nat: used for network address translation
+    \item mangle: used for specialized packet alteration
+    \item raw: used for configuring exemptions from connection tracking
+\end{itemize}
+
+\subsection{MANGLE}
+Used for IP header manipulation (should not be used for filtering or NAT).
+Five chain to alter
+\begin{itemize}
+    \item PREROUTING: for altering incoming packets before routing
+    \item INPUT: for altering packets destined for local sockets
+    \item FORWARD: for altering packets being routed through the box
+    \item OUTPUT: for altering locally generated packets before routing
+    \item POSTROUTING: for altering packets as they are about to go out
+\end{itemize}
+
+\subsection{FILTER}
+Used for filterning packets. Three built in chains:
+\begin{itemize}
+    \item INPUT: for packets destined for local sockets
+    \item FORWARD: for packets being routed through the box
+    \item OUTPUT: for locally generated packets
+\end{itemize}
+
+\subsection{NAT}
+Used for NAT to translate the packets source field or destination field. (only the first packet of a stream will hit this table, the others will have the same action)
+
+Special targets:
+\begin{itemize}
+    \item DNAT: for altering destination IP address (PREROUTING and OUTPUT)
+    \item SNAT: for altering source IP address (POSTROUTING)
+    \item MASQUERADE: for dynamic SNAT (POSTROUTING)
+    \item REDIRECT: for altering destination IP to localhost (PREROUTING)
+\end{itemize}
