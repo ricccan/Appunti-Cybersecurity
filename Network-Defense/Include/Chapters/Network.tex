@@ -418,3 +418,115 @@ Special targets:
     \item MASQUERADE: for dynamic SNAT (POSTROUTING)
     \item REDIRECT: for altering destination IP to localhost (PREROUTING)
 \end{itemize}
+
+\chapter{VPN}
+A virtual network built on top of another network infrastructure, wich can provid a secure
+comunication mechanism for data and other information transferred between two endpoints. 
+Usually based on the use of encryption.
+
+It has the following safety goals:
+\begin{itemize}
+    \item confidentiality: protect data from unauthorized access
+    \item integrity: ensure that data is not tampered with during transmission
+    \item authentication: verify the identity of the parties involved in the communication
+    \item replay protection: prevent attackers from intercepting and reusing data packets
+    \item access control: restrict access to the VPN network to authorized users only
+    \item traffic analyis resistance: make it difficult for attackers to analyze the traffic patterns of the VPN network
+\end{itemize}
+
+It has the following usability goals:
+\begin{itemize}
+    \item Transparency: the VPN should be transparent to users and applications, allowing them to use the network as they normally would without any special configuration or changes.
+    \item flexibility: the VPN should be flexible enough to support a wide range of use cases and network configurations, including remote access, site-to-site connectivity, and cloud-based deployments.
+    \item simplicity: the VPN should be easy to set up and manage, with a user-friendly interface and clear documentation.
+\end{itemize}
+
+\section{Tunneling}
+Operation of a network connection on top of another network connection, allows two host or sites to communicate through another network that they do not want to use directly.
+\subsection{site-to-site tunneling}
+Enables a PDU to be transported from one site to another without its content
+being processed by hosts on the route. The idea is to incapsulate the whole PDU in another PDU sent out on the network connecting the two sites.
+This host-to-host communication does not need to use IP
+
+\subsection{Tunneling for VPN}
+tunneling offers the basic methods for providing VPN.
+There are two main VPN modes:
+\begin{itemize}
+    \item split tunneling: Some traffic goes through tunnel, other traffic uses remote user’s default gateway
+    \item full tunneling: All traffic goes through tunnel
+\end{itemize}
+
+\section{VPN device placement}
+\subsection{SSL VPN device placement}
+Device placement is a challenge because it affects security, functionality and performance.
+The main options for placement are:
+\begin{itemize}
+    \item VPN functionality on the firewall: VPN functionality is integrated into the firewall, providing a single point of management and security. However, this can create a single point of failure and may not be suitable for high-traffic environments.
+    \item VPN device in internal network: The VPN device is placed within the internal network, providing better performance and security. However, this can create a potential security risk if the VPN device is compromised.
+    \item Single interface VPN device in DMZ: The VPN device is placed in the DMZ, providing a balance between security and performance. However, this can create a potential security risk if the VPN device is compromised.
+    \item Dual interface VPN device in DMZ: The VPN device is placed in the DMZ with two interfaces, providing better security and performance. However, this can create a potential security risk if the VPN device is compromised.
+\end{itemize}
+
+\subsection{VPN enabled firewall}
+The VPN device communicates directly with internal hosts.
+
+Advantages:
+\begin{itemize}
+    \item NO holes in FW between VPN device and internal hosts
+    \item Traffic between device and internal network must go through FW.
+    \item simple network administration since only one box to administer
+\end{itemize}
+Disadvantages:
+\begin{itemize}
+    \item Limited to VPN functionality offered by FW vendor.
+    \item FW directly accessible to external users via port 443.
+    \item Adding VPN functionality to FW can introduce vulnerabilities.
+\end{itemize}
+
+\subsection{VPN internal}
+Advantages:
+\begin{itemize}
+    \item Only single rule for single address to be added to FW.
+    \item No “holes” needed in FW between VPN device and internal network.
+    \item VPN traffic is behind FW, so protected from attacks by machines in DMZ.
+\end{itemize}
+Disadvantages:
+\begin{itemize}
+    \item VPN traffic passes through FW on tunnel, so it is not analyzed.
+    \item Unsolicited traffic can be sent into internal network from outside to internal
+VPN device.
+    \item  Internal network is compromised if VPN device is compromised
+\end{itemize}
+
+\subsection{DMZ with VPN}
+Advantages:
+\begin{itemize}
+    \item Internal network protected against compromised VPN device.
+    \item Traffic between device and internal network must go through FW.
+    \item IDS in DMZ can analyze traffic destined for internal network.
+\end{itemize}
+Disadvantages:
+\begin{itemize}
+    \item Numerous ports open in FW between device and internal hosts.
+    \item Decrypted traffic from device to internal network must be sent through DMZ.
+    \item  FW bypassed when user traffic is destined for hosts in DMZ.
+\end{itemize}
+
+\subsection{VPN with two interfaces in DMZ}
+Clients connect to external device interface, internal traffic uses internal
+interface.
+
+Advantages:
+\begin{itemize}
+    \item All advantages of placing VPN device DMZ.
+    \item Unencrypted traffic to internal hosts is protected from other hosts in DMZ.
+    \item Only FW interface connected to device’s internal interface needs to permit traffic
+from VPN device.
+\end{itemize}
+Disadvantages:
+\begin{itemize}
+    \item Numerous ports open in FW between device and internal hosts.
+    \item May introduce additional routing complexity.
+    \item FW bypassed if split tunneling is not used and user traffic is destined for hosts in
+DMZ
+\end{itemize}
