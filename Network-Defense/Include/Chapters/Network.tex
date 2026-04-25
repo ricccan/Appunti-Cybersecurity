@@ -530,3 +530,78 @@ Disadvantages:
     \item FW bypassed if split tunneling is not used and user traffic is destined for hosts in
 DMZ
 \end{itemize}
+
+\section{SSL tunneling}
+\subsection{SSL e TLS}
+Secure sockets layer (SSL) and transport layer security (TLS) are one of the most
+widely used security services.General-purpose service
+implemented as a set of
+protocols that rely on TCP.
+SSL applies security in the transport layer, placed on top of TCP, so no need to change TCP/IP stack or OS.
+Provides secure channel. Optional server authentication with public key certificates.
+
+\subsection{SSL protocol architectures} 
+Adds extra layer between T and A layer, adding extra elements to A layer.
+
+Record Protocol: Protocol offering
+basic encryption and integrity
+services to applications
+
+Application Protocols: control operation
+of the record protocol: Handshake: Used to authenticate server (and optionally client) and to agree on
+encryption keys and algorithms. Change cipher spec: Selects agreed keys and encryption algorithm until further
+notice. Alert: Transfers information about failures.
+
+\subsection{SSL/TLS Handshake protocol}
+4 phases:
+\begin{itemize}
+    \item Hello: Establishment of security capabilities: Client sends list of possibilities, in
+order of preference. Server selects one, and informs Client of its choice. Parties also
+exchange random noise for use in key generation.
+ \item Server authentication and key exchange: Server executes selected key exchange
+protocol (if needed). Server sends authentication info. (e.g. X.509 cert.) to Client.
+\item Client authentication and key exchange: Client executes selected key exchange
+protocol (mandatory). Client sends authentication info. to Server (optional).
+\item Finish: Shared secret key is derived from pre-secrets exch. in 2, 3. Change Cipher
+Spec. protocol is activated. Summaries of progress of Handshake Protocol are
+exchanged and checked by both parties.
+\end{itemize}
+
+\subsection{Digital certificate and certification authorities}
+digital certificate are documents that certifie the relation between a public
+key and its owner. to verify them we need a public key that we trust. 
+Trusted public keys are stored in certificates of certification authorities (CA).
+CA are organizations that issue digital certificates and perform vary task, such as:
+\begin{itemize}
+    \item Receive application for keys.
+    \item Verify applicant’s identity, conduct due diligence appropriate to the trust level,
+and issue key pairs.
+    \item Store public keys and protect them from unauthorized modification.
+    \item Keep a register of valid keys.
+    \item Revoke and delete keys that are invalid or expired. Maintain a certificate
+revocation list (CRL).
+
+\end{itemize}
+Certificates of CAs are stored in any computer that want to use internet
+securely.
+
+Certification authorities are
+organized in a hierarchy, called
+Public Key Infrastructure. To verify a certificate, one needs
+to verify all the signatures up to
+the top of the hierarchy
+
+\subsection{SSL/TSL heartbeat}
+It is an extension (RFC 6520) that allows to keep an established session
+alive
+To avoid the re-negotiation of the security parameters for establishing a
+secure session, we can keep using the same parameters even if there is
+no exchange of data
+It introduces two messages: HeartbeatRequest and HeartbeatResponse
+When one endpoint sends a HeartbeatRequest message to the other
+endpoints, the former also starts what is known as the retransmit timer
+ An SSL/TLS session is considered to have terminated in the absence of a
+HeartbeatResponse packet within a time interval.
+As a protection against a replay attack, HeartbeatRequest packets
+include a payload that must be returned without change by the receiver
+in its HeartbeatResponse packet.
