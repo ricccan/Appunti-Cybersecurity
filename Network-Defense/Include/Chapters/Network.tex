@@ -605,3 +605,55 @@ HeartbeatResponse packet within a time interval.
 As a protection against a replay attack, HeartbeatRequest packets
 include a payload that must be returned without change by the receiver
 in its HeartbeatResponse packet.
+
+\section{IPsec}
+A network layer protocol suited for providing security over ip, part of IPv6, add on for IPv4. 
+Can handle all three possible security architectures (gateway to gateway, host to gateway, host to host).
+There are basic function, provided by separate sub-protocols: Authentication header(AH) supports data integrity and authentication of IP packets,
+Encapsulated security payload(ESP) provides support for encryption and authentication, Internet Key Exchange(IKE) supports for key management.
+
+IP security association: an IPsec connection with all the paramethers needed, like crypto algorithms, key lenghts etc. Both sides
+must agree on the SA for the comunication to work. For a two way communication, two SA must be defined, and the parameters
+are negotiated between sender and reciver before the comunication start.
+
+Each SA is identified by: Security parameter index(32 bit integer chosed by sender), destination address, security protocol identifier.
+
+\subsection{IPsec modes}
+Transport mode: Provides protection for a T-layer packet embedded as payload in an IP packet.
+
+tunnel mode: Provides protection for an IP packet embedded as payload in an IP packet.ù
+
+\subsection{Authentication Header}
+AH header is inserted after the outermost ip header.
+
+One of the (many possible) IP header fields. Contains:
+\begin{itemize}
+    \item Next Header: Type of following header field.
+    \item Payload Length: (Length - 2), in 32-bit words, of AH.
+    \item SPI: Identifies SA in use.
+    \item Sequence Number: Monotonically increasing packet counter value.
+    \item Authentication Data (AD): (variable length) HMAC based on MD5 or SHA-1 criptorgraphic hashing
+algorithm, or AES-CBC, evaluated over:
+\end{itemize}
+
+Immutable fields do not change as the packet traverses the network,Mutable but predictable fields may change, but can be predicted,Mutable, unpredictable fields include Time-to-live, Header checksum.
+
+\subsection{ESP}
+ESP header inserted after the outermost IP header depending on whether Transport or
+Tunnel mode is used:
+Padding is added to end of T-layer payload to give (a certain amount) of traffic analysis
+protection. ESP trailer and (optional) ESP authentication field added after the end of the padded T-
+layer payload.
+As usual, authentication/integrity does not cover any mutable, unpredictable header fields.
+
+Encrypthion and authentication can be achived by: 
+\begin{itemize}
+    \item ESP with Authentication. First apply ESP to data, then add AH field.
+    \item Transport Adjacency. Use bundled SAs, first ESP, then AH.
+    \item Encryption covers original IP payload. Authentication covers ESP + original IP
+header, including source and destination IP addresses
+    \item Transport-Tunnel bundle. Used to achieve authentication before encryption, for
+example via inner AH transport SA and outer ESP tunnel SA.
+    \item Authentication covers IP payload + IP immutable header. Encryption is applied
+to entire authenticated inner packet.
+\end{itemize}
